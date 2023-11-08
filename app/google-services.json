@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "343536843209",
+    "project_id": "makeable-chat-udfordring",
+    "storage_bucket": "makeable-chat-udfordring.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343536843209:android:fa8f387168c729c2239018",
+        "android_client_info": {
+          "package_name": "com.chiasmera.makeablechat_udfordring"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxbsjs68fFf0aEzdJZUuUrodmT7dfKKCE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
