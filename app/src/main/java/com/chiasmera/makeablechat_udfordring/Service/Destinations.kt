@@ -25,17 +25,24 @@ class Destinations {
     }
 
     /**
-     * Destination for the SignIn view
+     * Destination for the logIn view
      */
     object LogInDestination : Destination {
-        override val route = "signIn"
+        override val route = "logIn"
     }
 
     /**
-     * Destination for the SignIn view
+     * Destination for the startScreen view
      */
     object StartScreenDestination : Destination {
         override val route = "startScreen"
+    }
+
+    /**
+     * Destination for the conversationCreation view
+     */
+    object ConversationCreationDestination : Destination {
+        override val route = "conversationCreation"
     }
 
     /**

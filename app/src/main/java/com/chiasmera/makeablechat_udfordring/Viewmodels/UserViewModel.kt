@@ -15,6 +15,7 @@ import com.chiasmera.makeablechat_udfordring.Service.AuthService
 import com.chiasmera.makeablechat_udfordring.Service.DatabaseService
 
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 sealed interface LoggedInState {
     data class LoggedIn(val user: User) : LoggedInState
@@ -24,17 +25,17 @@ sealed interface LoggedInState {
 }
 
 class UserViewModel(
-    private val auth : AuthService,
-    private val db : DatabaseService
+    private val auth: AuthService,
+    private val db: DatabaseService
 ) : ViewModel() {
 
-    var user : LoggedInState by mutableStateOf(LoggedInState.Anonymous)
+    var user: LoggedInState by mutableStateOf(LoggedInState.Anonymous)
     var conversations = mutableStateListOf<Conversation>()
-    private var stopConversationsListener by mutableStateOf( {  } )
+    private var stopConversationsListener by mutableStateOf({ })
     var users = mutableStateListOf<User>()
-    private var stopUsersListener by mutableStateOf( {  } )
+    private var stopUsersListener by mutableStateOf({ })
 
-    fun login(email : String, password : String) {
+    fun login(email: String, password: String) {
         user = LoggedInState.Loading("Signing up and logging in...")
 
         viewModelScope.launch {
@@ -47,7 +48,7 @@ class UserViewModel(
                 val currentUser = db.getUserById(id)
                 if (currentUser != null) {
 
-                    onLogin()
+                    onLogin(currentUser)
                     LoggedInState.LoggedIn(currentUser)
 
 
@@ -59,19 +60,19 @@ class UserViewModel(
         }
     }
 
-    fun signUp (email : String, password : String, userName: String) {
+    fun signUp(email: String, password: String, userName: String) {
         user = LoggedInState.Loading("Signing up and logging in...")
 
-        viewModelScope.launch{
+        viewModelScope.launch {
 
 
             val id = auth.signUp(email, password)
 
             user = if (id != null) {
                 val createdUser = User(id, userName)
-                db.createUser( createdUser)
+                db.createUser(createdUser)
 
-                onLogin()
+                onLogin(createdUser)
                 LoggedInState.LoggedIn(createdUser)
 
 
@@ -81,7 +82,7 @@ class UserViewModel(
         }
     }
 
-    fun logout () {
+    fun logout() {
         viewModelScope.launch {
             auth.logout()
         }
@@ -97,19 +98,30 @@ class UserViewModel(
         stopConversationsListener()
     }
 
-    private suspend fun onLogin() {
+    private suspend fun onLogin(user: User) {
         viewModelScope.launch {
-            db.addAllConversationsListener(onUpdatedConversations = {
-                    conversationsList ->
-                conversations.clear()
-                conversations.addAll(conversationsList)
-            })
+            db.addAllConversationsForUserListener(
+                user = user,
+                onUpdatedConversations = { conversationsList ->
+                    conversations.clear()
+                    conversations.addAll(conversationsList)
+                })
 
-            db.addAllUsersListener(onUpdatedUsers = {
-                    usersList ->
+            db.addAllUsersListener(onUpdatedUsers = { usersList ->
                 users.clear()
                 users.addAll(usersList)
             })
         }
+    }
+
+    fun createConversation(participants: List<User>): Conversation {
+        val conversation = Conversation(
+            id = UUID.randomUUID().toString(),
+            participants = participants
+        )
+        viewModelScope.launch {
+            db.createConversation(conversation)
+        }
+        return conversation
     }
 }
