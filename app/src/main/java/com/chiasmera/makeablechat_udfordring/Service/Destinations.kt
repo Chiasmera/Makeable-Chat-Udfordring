@@ -43,6 +43,10 @@ class Destinations {
      */
     object ConversationDestination : Destination {
         override val route = "conversation"
+        val argName = "convID"
+        val routeWithArgs = "${route}/{${argName}}"
+        val arguments = listOf(navArgument(argName) { type = NavType.StringType })
+
     }
 
 }

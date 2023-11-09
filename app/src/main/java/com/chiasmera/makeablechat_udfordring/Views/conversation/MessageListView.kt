@@ -17,8 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.chiasmera.makeablechat_udfordring.Model.Message
 import com.chiasmera.makeablechat_udfordring.Model.User
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import com.google.firebase.Timestamp
 import java.util.UUID
 
 @Composable
@@ -39,7 +38,7 @@ fun MessageListView(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = if (message.user == currentUser) {Alignment.End} else {Alignment.Start}
             ) {
-                Text("${message.user.name} ${message.timestamp.format(DateTimeFormatter.ofPattern("dd.MM.yyy HH:mm"))}",
+                Text("${message.user.name} ${message.timestamp.toDate()}",
                     style = MaterialTheme.typography.labelMedium)
                 Surface (
                     modifier = Modifier.padding(8.dp),
@@ -70,11 +69,11 @@ fun MessageListPreview() {
     val otherUser = User (user2.toString(), "anden dude")
 
     MessageListView(messages = listOf(
-        Message("Hej", LocalDateTime.now(), currentUser),
-        Message("Hej selv", LocalDateTime.now(), otherUser),
-        Message("nej tak", LocalDateTime.now(),currentUser ),
-        Message("farvel", LocalDateTime.now(), currentUser),
-        Message("okay", LocalDateTime.now(), otherUser)
+        Message("Hej", Timestamp.now(), currentUser),
+        Message("Hej selv", Timestamp.now(), otherUser),
+        Message("nej tak", Timestamp.now(),currentUser ),
+        Message("farvel", Timestamp.now(), currentUser),
+        Message("okay", Timestamp.now(), otherUser)
     ),
         currentUser = currentUser
     )

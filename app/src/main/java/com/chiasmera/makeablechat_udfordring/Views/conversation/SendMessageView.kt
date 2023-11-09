@@ -37,9 +37,10 @@ fun SendMessageView(
             value = message,
             title = "Message",
             placeholder = "Message",
-            onValueChange = onValueChange)
+            onValueChange = onValueChange
+        )
 
-        FilledIconButton(onClick = onclick) {
+        FilledIconButton(onClick =  onclick ) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_send_24), contentDescription = stringResource(id = R.string.send_icon)
             )

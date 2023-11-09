@@ -20,7 +20,7 @@ sealed interface AuthService {
     /**
      * Logs out the current user
      */
-    fun logout ()
+    suspend fun logout ()
 
     /**
      * Signs up a user
@@ -30,7 +30,7 @@ sealed interface AuthService {
     /**
      * Deletes and logs out the current user
      */
-    fun deleteUser ()
+    suspend fun deleteUser ()
 }
 
 class FirebaseAuthService : AuthService {
@@ -55,7 +55,7 @@ class FirebaseAuthService : AuthService {
     /**
      * Logs out the current user
      */
-    override fun logout () {
+    override suspend fun logout () {
         auth.signOut()
     }
 
@@ -73,7 +73,7 @@ class FirebaseAuthService : AuthService {
     /**
      * Deletes and logs out the current user
      */
-    override fun deleteUser () {
+    override suspend fun deleteUser () {
        auth.currentUser!!.delete()
     }
 

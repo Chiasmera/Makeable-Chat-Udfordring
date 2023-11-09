@@ -1,6 +1,5 @@
 package com.chiasmera.makeablechat_udfordring.Views.authentication
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -71,5 +70,5 @@ fun SignUpView(
 @Preview
 @Composable
 fun SignUpPreview() {
-    SignUpView( {}, { _, _, _ -> Unit})
+    SignUpView( {}, { _, _, _ -> })
 }
