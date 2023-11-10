@@ -20,31 +20,43 @@ import com.chiasmera.makeablechat_udfordring.Views.components.InputField
 
 @Composable
 fun LogInView(
-    onNavigateToSignUp : () -> Unit,
-    onLogIn: (email : String, password : String) -> Unit
+    onNavigateToSignUp: () -> Unit,
+    onLogIn: (email: String, password: String) -> Unit
 ) {
-    var email by remember {mutableStateOf("")}
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    Column (
+    Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         Column {
-            InputField(value = email, onValueChange = {email = it},  title = "Email", placeholder = "example@gmail.com")
-            InputField(value = password, onValueChange = {password = it},  title = "Password", placeholder = "p/\\5Sw0rD314", secret = true)
+            InputField(
+                value = email,
+                onValueChange = { email = it },
+                title = "Email",
+                placeholder = "example@gmail.com"
+            )
+            InputField(
+                value = password,
+                onValueChange = { password = it },
+                title = "Password",
+                placeholder = "p/\\5Sw0rD314",
+                secret = true
+            )
         }
 
-        Column (
+        Column(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             FilledTonalButton(
-                onClick = {  onLogIn(email, password) }
+                onClick = { onLogIn(email, password) }
             ) {
                 Text("Sign In")
             }
-            TextButton(onClick = onNavigateToSignUp,
+            TextButton(
+                onClick = onNavigateToSignUp,
                 modifier = Modifier.padding(top = 0.dp)
             ) {
                 Text(

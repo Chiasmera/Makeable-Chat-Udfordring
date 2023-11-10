@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,7 +39,9 @@ fun ConversationCreationView(
     otherUsers.remove(currentUser)
 
     Column(
-        modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             "Select user(s) to start conversation with",
@@ -51,7 +54,9 @@ fun ConversationCreationView(
             items(otherUsers) { user ->
                 var selected by remember { mutableStateOf(false) }
                 TextButton(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 16.dp),
                     onClick = {
                         if (!selected) {
                             selected = true
@@ -87,7 +92,6 @@ fun ConversationCreationView(
 
         FilledTonalButton(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(16.dp), onClick = {
                 selectedUsers.add(currentUser)
                 onNewConversation(selectedUsers)

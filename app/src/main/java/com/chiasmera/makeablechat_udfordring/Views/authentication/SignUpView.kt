@@ -20,39 +20,62 @@ import com.chiasmera.makeablechat_udfordring.Views.components.InputField
 
 @Composable
 fun SignUpView(
-    onNavigateToLogIn : () -> Unit,
-    onSignUp : (email : String, password : String, userName : String) -> Unit
+    onNavigateToLogIn: () -> Unit,
+    onSignUp: (email: String, password: String, userName: String) -> Unit
 ) {
-    var userName by remember {mutableStateOf("")}
-    var email by remember {mutableStateOf("")}
-    var password by remember {mutableStateOf("")}
-    var repeatPassword by remember {mutableStateOf("")}
+    var userName by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var repeatPassword by remember { mutableStateOf("") }
 
-    Column (
+    Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         Column {
-            InputField(value = userName, onValueChange = {userName = it}, title = "User Name", placeholder = "ChatMeister69")
-            InputField(value = email, onValueChange = {email = it},  title = "Email", placeholder = "example@gmail.com")
-            InputField(value = password, onValueChange = {password = it},  title = "Password", placeholder = "p/\\5Sw0rD314", secret = true)
-            InputField(value = repeatPassword, onValueChange = {repeatPassword = it},  title = "Repeat Password", placeholder = "p/\\5Sw0rD314", secret = true)
+            InputField(
+                value = userName,
+                onValueChange = { userName = it },
+                title = "User Name",
+                placeholder = "ChatMeister69"
+            )
+            InputField(
+                value = email,
+                onValueChange = { email = it },
+                title = "Email",
+                placeholder = "example@gmail.com"
+            )
+            InputField(
+                value = password,
+                onValueChange = { password = it },
+                title = "Password",
+                placeholder = "p/\\5Sw0rD314",
+                secret = true
+            )
+            InputField(
+                value = repeatPassword,
+                onValueChange = { repeatPassword = it },
+                title = "Repeat Password",
+                placeholder = "p/\\5Sw0rD314",
+                secret = true
+            )
         }
 
-        Column (
+        Column(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             FilledTonalButton(
-                onClick = { onSignUp(email,password, userName) },
+                onClick = { onSignUp(email, password, userName) },
                 enabled = password == repeatPassword
                         && !userName.isBlank()
-                        &&!email.isBlank()
+                        && !email.isBlank()
                         && !password.isBlank()
             ) {
                 Text("Sign Up")
             }
-            TextButton(onClick = onNavigateToLogIn,
+            TextButton(
+                onClick = onNavigateToLogIn,
                 modifier = Modifier.padding(top = 0.dp)
             ) {
                 Text(
@@ -70,5 +93,5 @@ fun SignUpView(
 @Preview
 @Composable
 fun SignUpPreview() {
-    SignUpView( {}, { _, _, _ -> })
+    SignUpView({}, { _, _, _ -> })
 }

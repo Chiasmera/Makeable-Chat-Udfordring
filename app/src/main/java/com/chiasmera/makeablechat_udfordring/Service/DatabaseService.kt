@@ -11,23 +11,18 @@ import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.tasks.await
 
 sealed interface DatabaseService {
-//    /**
-//     * Returns the list of users
-//     */
-//     suspend fun getUsers() : Collection<User>
-
-    suspend fun getUserById(id : String) : User?
-
-//    /**
-//     * Returns all conversations in which the provided user is a participant
-//     */
-//    suspend fun getConversationsForUser(user : User) : List<Conversation>
+    /**
+     * Finds a speciffic user by the ID given
+     */
+    suspend fun getUserById(id: String): User?
 
     /**
      * Begins listening to messages for a specific conversation.
      * Returns a function that will remove the listener when called
      */
-    suspend fun addConversationListener(conversation : Conversation, onUpdatedMessages : (List<Message>) -> Unit)  : () -> Unit
+    suspend fun addConversationListener(
+        conversation: Conversation, onUpdatedMessages: (List<Message>) -> Unit
+    ): () -> Unit
 
     /**
      * Creates a new conversation between the list of users and returns the id
@@ -37,16 +32,24 @@ sealed interface DatabaseService {
     /**
      * Creates a new user in the database
      */
-    suspend fun createUser(user : User)
+    suspend fun createUser(user: User)
 
     /**
      * Adds a new message to the conversation
      */
-    suspend fun addMessage(conversation : Conversation, message: Message)
+    suspend fun addMessage(conversation: Conversation, message: Message)
 
-    suspend fun addAllConversationsForUserListener(user : User, onUpdatedConversations :(List<Conversation>) -> Unit ) : () -> Unit
+    /**
+     * Adds a listener that will perform the given callback when the list of conversations is updated
+     */
+    suspend fun addAllConversationsForUserListener(
+        user: User, onUpdatedConversations: (List<Conversation>) -> Unit
+    ): () -> Unit
 
-    suspend fun addAllUsersListener(onUpdatedUsers :(List<User>) -> Unit ) : () -> Unit
+    /**
+     * Adds a listener to the list of users, performing the given callback on update
+     */
+    suspend fun addAllUsersListener(onUpdatedUsers: (List<User>) -> Unit): () -> Unit
 }
 
 const val TAG = "DATABASESERVICE"
@@ -60,7 +63,7 @@ class FirestoreDatabaseService : DatabaseService {
     val userRef = Firebase.firestore.collection(USERS)
 
     override suspend fun getUserById(id: String): User? {
-        var user : User? = null
+        var user: User? = null
         val docRef = userRef.document(id)
         docRef.get().addOnSuccessListener { documentSnapshot ->
             user = documentSnapshot.toObject<User>()
@@ -68,10 +71,9 @@ class FirestoreDatabaseService : DatabaseService {
         return user
     }
 
-    /**
-     * Returns all messages for a specific conversation
-     */
-    override suspend fun addConversationListener(conversation : Conversation, onUpdatedMessages : (List<Message>) -> Unit) : () -> Unit {
+    override suspend fun addConversationListener(
+        conversation: Conversation, onUpdatedMessages: (List<Message>) -> Unit
+    ): () -> Unit {
         val colRef = db.collection(CONVERSATIONS).document(conversation.id).collection(MESSAGES)
         val registration = colRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
@@ -87,27 +89,29 @@ class FirestoreDatabaseService : DatabaseService {
             }
         }
 
-        return {  registration.remove() }
+        return { registration.remove() }
     }
 
 
-    override suspend fun createConversation(conversation : Conversation) {
+    override suspend fun createConversation(conversation: Conversation) {
         val docRef = db.collection(CONVERSATIONS).document(conversation.id)
         docRef.set(conversation)
         docRef.collection(MESSAGES)
     }
 
-    override suspend fun createUser(user : User) {
+    override suspend fun createUser(user: User) {
         db.collection(USERS).document(user.id).set(user)
     }
 
-    override suspend fun addMessage(conversation : Conversation, message: Message) {
+    override suspend fun addMessage(conversation: Conversation, message: Message) {
         val convRef = db.collection(CONVERSATIONS).document(conversation.id)
         convRef.collection(MESSAGES).add(message)
 
     }
 
-    override suspend fun addAllConversationsForUserListener(user : User, onUpdatedConversations: (List<Conversation>) -> Unit) : () -> Unit {
+    override suspend fun addAllConversationsForUserListener(
+        user: User, onUpdatedConversations: (List<Conversation>) -> Unit
+    ): () -> Unit {
         val colRef = db.collection(CONVERSATIONS).whereArrayContains("participants", user)
         val registration = colRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
@@ -123,10 +127,10 @@ class FirestoreDatabaseService : DatabaseService {
             }
         }
 
-        return {  registration.remove() }
+        return { registration.remove() }
     }
 
-    override suspend fun addAllUsersListener(onUpdatedUsers: (List<User>) -> Unit) : () -> Unit {
+    override suspend fun addAllUsersListener(onUpdatedUsers: (List<User>) -> Unit): () -> Unit {
         val colRef = db.collection(USERS)
         val registration = colRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
@@ -142,7 +146,7 @@ class FirestoreDatabaseService : DatabaseService {
             }
         }
 
-        return {  registration.remove() }
+        return { registration.remove() }
     }
 
 

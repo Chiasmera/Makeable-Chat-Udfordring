@@ -25,13 +25,6 @@ class Destinations {
     }
 
     /**
-     * Destination for the logIn view
-     */
-    object LogInDestination : Destination {
-        override val route = "logIn"
-    }
-
-    /**
      * Destination for the startScreen view
      */
     object StartScreenDestination : Destination {

@@ -1,7 +1,5 @@
 package com.chiasmera.makeablechat_udfordring.Views
 
-import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,8 +18,7 @@ import com.chiasmera.makeablechat_udfordring.Views.conversationOverview.Conversa
 fun ChatApp(
     navController: NavHostController,
     db: DatabaseService,
-    userViewModel: UserViewModel,
-    windowSize: WindowSizeClass
+    userViewModel: UserViewModel
 ) {
     NavHost(
         navController = navController,
@@ -45,7 +42,7 @@ fun ChatApp(
         }
 
         composable(route = Destinations.SignUpDestination.route) {
-            SignUpView(onNavigateToLogIn = { navController.navigate(Destinations.LogInDestination.route) },
+            SignUpView(onNavigateToLogIn = { navController.navigate(Destinations.StartScreenDestination.route) },
                 onSignUp = { email: String, password: String, userName: String ->
                     userViewModel.signUp(email, password, userName)
                     navController.navigate(Destinations.StartScreenDestination.route)
@@ -66,10 +63,10 @@ fun ChatApp(
                         conversationViewModel = ConversationViewModel(user.user, conversation, db)
                     )
                 } else {
-                    Text("Error")
+                    navController.navigate(Destinations.StartScreenDestination.route)
                 }
             } else {
-                Text("Error")
+                navController.navigate(Destinations.StartScreenDestination.route)
             }
         }
 

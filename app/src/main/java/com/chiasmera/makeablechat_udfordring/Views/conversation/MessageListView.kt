@@ -22,35 +22,50 @@ import java.util.UUID
 
 @Composable
 fun MessageListView(
-    messages : List<Message>,
-    currentUser : User
+    messages: List<Message>,
+    currentUser: User
 ) {
 
-    LazyColumn (
+    LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         reverseLayout = false,
         verticalArrangement = Arrangement.Bottom,
     ) {
-        items(messages) {message ->
-            Column (
+        items(messages) { message ->
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = if (message.user == currentUser) {Alignment.End} else {Alignment.Start}
+                horizontalAlignment = if (message.user == currentUser) {
+                    Alignment.End
+                } else {
+                    Alignment.Start
+                }
             ) {
-                Text("${message.user.name} ${message.timestamp.toDate()}",
-                    style = MaterialTheme.typography.labelMedium)
-                Surface (
+                Text(
+                    "${message.user.name} ${message.timestamp.toDate()}",
+                    style = MaterialTheme.typography.labelMedium
+                )
+                Surface(
                     modifier = Modifier.padding(8.dp),
                     shape = MaterialTheme.shapes.large.copy(
-                        bottomEnd = if (currentUser == message.user) {CornerSize(0.dp)} else {CornerSize(12.dp)},
-                        bottomStart = if (currentUser != message.user) {CornerSize(0.dp)} else {CornerSize(12.dp)}
+                        bottomEnd = if (currentUser == message.user) {
+                            CornerSize(0.dp)
+                        } else {
+                            CornerSize(12.dp)
+                        },
+                        bottomStart = if (currentUser != message.user) {
+                            CornerSize(0.dp)
+                        } else {
+                            CornerSize(12.dp)
+                        }
                     ),
                     color = MaterialTheme.colorScheme.primary
                 ) {
-                    Text(text = message.content,
+                    Text(
+                        text = message.content,
                         modifier = Modifier
-                        .padding(vertical = 8.dp, horizontal = 24.dp),
+                            .padding(vertical = 8.dp, horizontal = 24.dp),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
@@ -66,15 +81,16 @@ fun MessageListPreview() {
     val user1 = UUID.randomUUID()
     val user2 = UUID.randomUUID()
     val currentUser = User(user1.toString(), "mig selv")
-    val otherUser = User (user2.toString(), "anden dude")
+    val otherUser = User(user2.toString(), "anden dude")
 
-    MessageListView(messages = listOf(
-        Message("Hej", Timestamp.now(), currentUser),
-        Message("Hej selv", Timestamp.now(), otherUser),
-        Message("nej tak", Timestamp.now(),currentUser ),
-        Message("farvel", Timestamp.now(), currentUser),
-        Message("okay", Timestamp.now(), otherUser)
-    ),
+    MessageListView(
+        messages = listOf(
+            Message("Hej", Timestamp.now(), currentUser),
+            Message("Hej selv", Timestamp.now(), otherUser),
+            Message("nej tak", Timestamp.now(), currentUser),
+            Message("farvel", Timestamp.now(), currentUser),
+            Message("okay", Timestamp.now(), otherUser)
+        ),
         currentUser = currentUser
     )
 }

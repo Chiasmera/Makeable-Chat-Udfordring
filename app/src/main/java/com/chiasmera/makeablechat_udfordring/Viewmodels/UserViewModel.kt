@@ -2,21 +2,21 @@ package com.chiasmera.makeablechat_udfordring.Viewmodels
 
 import android.util.Log
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-
-import com.chiasmera.makeablechat_udfordring.Model.User
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chiasmera.makeablechat_udfordring.Model.Conversation
+import com.chiasmera.makeablechat_udfordring.Model.User
 import com.chiasmera.makeablechat_udfordring.Service.AuthService
 import com.chiasmera.makeablechat_udfordring.Service.DatabaseService
-
 import kotlinx.coroutines.launch
 import java.util.UUID
 
+/**
+ * Interface to keep track of the login state
+ */
 sealed interface LoggedInState {
     data class LoggedIn(val user: User) : LoggedInState
     object Anonymous : LoggedInState
@@ -24,6 +24,9 @@ sealed interface LoggedInState {
     data class Loading(val message: String) : LoggedInState
 }
 
+/**
+ * Class responsible for the state of the user and the users options in the app
+ */
 class UserViewModel(
     private val auth: AuthService,
     private val db: DatabaseService
@@ -35,6 +38,9 @@ class UserViewModel(
     var users = mutableStateListOf<User>()
     private var stopUsersListener by mutableStateOf({ })
 
+    /**
+     * Logs in the user via the authentication system
+     */
     fun login(email: String, password: String) {
         user = LoggedInState.Loading("Signing up and logging in...")
 
@@ -60,6 +66,9 @@ class UserViewModel(
         }
     }
 
+    /**
+     * Signs up a new user, and then logs in the user
+     */
     fun signUp(email: String, password: String, userName: String) {
         user = LoggedInState.Loading("Signing up and logging in...")
 
@@ -82,6 +91,10 @@ class UserViewModel(
         }
     }
 
+    /**
+     * Logs out the user
+     * TODO: Implement a button that actually uses this
+     */
     fun logout() {
         viewModelScope.launch {
             auth.logout()
@@ -92,12 +105,17 @@ class UserViewModel(
         stopConversationsListener()
     }
 
-
+    /**
+     * Removes listeners on conversations and users upon clearing
+     */
     override fun onCleared() {
         stopUsersListener()
         stopConversationsListener()
     }
 
+    /**
+     * Helper function that adds listeners to conversations and users, upon a user loggin in
+     */
     private suspend fun onLogin(user: User) {
         viewModelScope.launch {
             db.addAllConversationsForUserListener(
@@ -114,6 +132,9 @@ class UserViewModel(
         }
     }
 
+    /**
+     * Creates a new conversation in the database
+     */
     fun createConversation(participants: List<User>): Conversation {
         val conversation = Conversation(
             id = UUID.randomUUID().toString(),
